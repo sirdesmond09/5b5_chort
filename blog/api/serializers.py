@@ -10,7 +10,7 @@ class PostSerializer(serializers.ModelSerializer):
         fields = ["title", "content", "date_posted", "slug"]
 
 
-class UserSerialier(serializers.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
 
