@@ -34,7 +34,7 @@ def api_list_view(request):
 
 
 
-@api_view(["GET"])
+@api_view(["GET", "PUT", "DELETE"])
 def api_detail_view(request, slug):
     try:
         post = Post.objects.get(slug=slug)
@@ -44,6 +44,22 @@ def api_detail_view(request, slug):
     if request.method == "GET":
         serializer = PostSerializer(post)
         return Response(serializer.data)
+
+    elif request.method == "PUT":
+        serializer = PostSerializer(post, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    elif request.method == "DELETE":
+        data = {}
+        operation = post.delete()
+        if operation:
+            data["Success"] = "Post delete successful"
+        else:
+            data["Failure"] = "Post delete failed"
+        return Response(data=data)
 
 
 @api_view(["PUT"])
