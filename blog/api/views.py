@@ -1,9 +1,9 @@
-import imp
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from .serializers import PostSerializer
 from blog.models import Post
+from django.contrib.auth.models import User
 
 
 @api_view(["GET"])
@@ -58,6 +58,19 @@ def api_delete_view(request, slug):
         else:
             data["Failure"] = "Post delete failed"
         return Response(data=data)
+
+    
+@api_view(["POST"])
+def api_create_view(request):
+    user = User.objects.get(pk=1)
+    post = Post(author=user)
+
+    if request.method == "POST":
+        serializer = PostSerializer(post, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 
