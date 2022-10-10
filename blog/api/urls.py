@@ -5,8 +5,8 @@ from rest_framework.authtoken.views import obtain_auth_token
 
 urlpatterns = [
     path("home", api_list_view, name="home2"),
-    path("user", get_user_properties, name="users"),
     path("<slug:slug>/", api_detail_view, name="detail2"),
+    path("users", get_user_properties, name="users"),
     path("<slug:slug>/update", api_update_view, name="update"),
     path("<slug:slug>/delete", api_delete_view, name="delete"),
     path("create", api_create_view, name="create"),

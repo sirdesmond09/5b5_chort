@@ -154,7 +154,7 @@ class PostListView(ListAPIView):
 
 
 @api_view(["GET"])
-@permission_classes((IsAuthenticated))
+@permission_classes((IsAuthenticated,))
 def get_user_properties(request):
     try:
         user = request.user
@@ -165,6 +165,27 @@ def get_user_properties(request):
         serializer = UserPropertiesSerializer(user)
         return Response(serializer.data)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(["PUT"])
+@permission_classes((IsAuthenticated,))
+def api_update_user_properties(request):
+    try:
+        user = request.user
+    except User.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == "PUT":
+        serializer = UserPropertiesSerializer(user, data=request.data)
+        data = {}
+        if serializer.is_valid():
+            updated_post = serializer.save()
+            data["success"] = "Account update successful"
+            data["username"] = updated_post.username
+            data["email"] = updated_post.email
+            return Response(data=data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 
