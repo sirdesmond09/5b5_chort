@@ -1,3 +1,4 @@
+from operator import is_
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -8,12 +9,29 @@ from django.contrib.auth.models import User
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from django.contrib.auth import get_user_model
 
-@api_view(["GET"])
+@api_view(["GET", "POST"])
 def api_list_view(request):
     if request.method == "GET":
         posts = Post.objects.all()
         serializer = PostSerializer(posts, many=True)
         return Response(serializer.data)
+    
+    elif request.method == "POST":
+        user = User.objects.get(pk=1)
+        post = Post(author=user)
+
+        serializer = PostSerializer(post, data=request.data)
+        if serializer.is_valid():
+            data = {}
+            new_post = serializer.save()
+            data["Response"] = "Post creation successful"
+            data["title"] = new_post.title
+            data["content"] = new_post.content
+            data["date_posted"] = new_post.date_posted
+            data["slug"] = new_post.slug
+            return Response(data=data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 @api_view(["GET"])
