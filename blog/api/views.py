@@ -9,6 +9,8 @@ from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIV
 from django.contrib.auth import get_user_model
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.generics import ListAPIView
+from rest_framework.authentication import TokenAuthentication
 
 @api_view(["GET", "POST"])
 def api_list_view(request):
@@ -137,6 +139,14 @@ def api_register_view(request):
             data["token"] = token
             return Response(data=data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class PostListView(ListAPIView):
+    queryset = 
+    serializer_class = 
+    permission_classes = 
+    authentication_classes = 
+    pagination_class
 
 
 
