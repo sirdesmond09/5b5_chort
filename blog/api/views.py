@@ -2,7 +2,7 @@ from operator import is_
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from .serializers import PostSerializer, UserSerializer
+from .serializers import PostSerializer, UserRegistrationSerializer
 from blog.models import Post
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
@@ -103,6 +103,16 @@ def api_create_view(request):
 
     if request.method == "POST":
         serializer = PostSerializer(post, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(["POST"])
+def api_register_view(request):
+    if request.method == "POST":
+        serializer = UserRegistrationSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
