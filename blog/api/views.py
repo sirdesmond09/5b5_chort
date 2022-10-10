@@ -1,7 +1,7 @@
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
-from .serializers import PostSerializer, UserRegistrationSerializer
+from .serializers import PostSerializer, UserRegistrationSerializer, UserPropertiesSerializer
 from blog.models import Post
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
@@ -151,6 +151,21 @@ class PostListView(ListAPIView):
     pagination_class = PageNumberPagination
     filter_backends = (SearchFilter, OrderingFilter)
     search_fields = ["title", "content", "slug", "author__username"]
+
+
+@api_view(["GET"])
+@permission_classes((IsAuthenticated))
+def get_user_properties(request):
+    try:
+        user = request.user
+    except User.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == "GET":
+        serializer = UserPropertiesSerializer(user)
+        return Response(serializer.data)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 
