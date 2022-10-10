@@ -150,7 +150,7 @@ class PostListView(ListAPIView):
     authentication_classes = (TokenAuthentication,)
     pagination_class = PageNumberPagination
     filter_backends = (SearchFilter, OrderingFilter)
-    search__fields = ["title", "content", "slug", "author__username"]
+    search_fields = ["title", "content", "slug", "author__username"]
 
 
 

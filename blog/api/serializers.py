@@ -47,3 +47,10 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         return user
 
 
+class UserProperties(serializers.ModelSerializer):
+    class Meta:
+        model = User
+
+        fields = ["pk", "username", "email"]
+
+
