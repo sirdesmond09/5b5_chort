@@ -11,4 +11,7 @@ class Post(models.Model):
     content = models.TextField()
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     date_posted = models.DateTimeField(default=timezone.now)
-    
+    slug = models.SlugField()
+
+    def __str__(self):
+        return self.title
