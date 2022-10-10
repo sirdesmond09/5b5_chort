@@ -6,6 +6,7 @@ from blog.models import Post
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from django.contrib.auth import get_user_model
 
 @api_view(["GET"])
 def api_list_view(request):
@@ -76,7 +77,7 @@ def api_create_view(request):
 
 
 class UserListView(ListCreateAPIView):
-    queryset = User.objects.all()
+    queryset = get_user_model().objects.all()
     serializer_class = UserSerializer
 
 
