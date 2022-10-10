@@ -5,7 +5,7 @@ from .serializers import PostSerializer
 from blog.models import Post
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
-
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 
 @api_view(["GET"])
 def api_list_view(request):
@@ -72,6 +72,12 @@ def api_create_view(request):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+class PostListView(ListCreateAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
 
 
 
