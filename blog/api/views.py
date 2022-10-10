@@ -19,8 +19,9 @@ def api_list_view(request):
         return Response(serializer.data)
     
     elif request.method == "POST":
-        user = User.objects.get(pk=1)
+        user = request.user
         post = Post(author=user)
+
 
         serializer = PostSerializer(post, data=request.data)
         if serializer.is_valid():
@@ -73,6 +74,10 @@ def api_update_view(request, slug):
     except Post.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
+    user = request.user
+    if user != post.author:
+        return Response({"Error": "You cannot update a post you didn't create"})
+
     if request.method == "PUT":
         serializer = PostSerializer(post, data=request.data)
         if serializer.is_valid():
@@ -90,6 +95,10 @@ def api_delete_view(request, slug):
         post = Post.objects.get(slug=slug)
     except Post.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
+
+    user = request.user
+    if user != post.author:
+        return Response({"Error": "You cannot delete a post you didn't create"})
     
     if request.method == "DELETE":
         data = {}
@@ -104,7 +113,7 @@ def api_delete_view(request, slug):
 @api_view(["POST"])
 @permission_classes((IsAuthenticated))
 def api_create_view(request):
-    user = User.objects.get(pk=1)
+    user = request.user
     post = Post(author=user)
 
     if request.method == "POST":
