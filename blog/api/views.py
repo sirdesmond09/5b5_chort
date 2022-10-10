@@ -10,6 +10,7 @@ from django.contrib.auth import get_user_model
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.generics import ListAPIView
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.authentication import TokenAuthentication
 
 @api_view(["GET", "POST"])
@@ -142,11 +143,11 @@ def api_register_view(request):
 
 
 class PostListView(ListAPIView):
-    queryset = 
-    serializer_class = 
-    permission_classes = 
-    authentication_classes = 
-    pagination_class
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+    permission_classes = (IsAuthenticated,)
+    authentication_classes = (TokenAuthentication,)
+    pagination_class = PageNumberPagination
 
 
 
