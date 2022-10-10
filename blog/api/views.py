@@ -76,10 +76,6 @@ def api_create_view(request):
 
 
 
-class UserListView(ListCreateAPIView):
-    queryset = get_user_model().objects.all()
-    serializer_class = UserSerializer
-
 
 
 
