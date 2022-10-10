@@ -8,6 +8,7 @@ from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from django.contrib.auth import get_user_model
+from rest_framework.authtoken.models import Token
 
 @api_view(["GET", "POST"])
 def api_list_view(request):
@@ -113,9 +114,15 @@ def api_create_view(request):
 def api_register_view(request):
     if request.method == "POST":
         serializer = UserRegistrationSerializer(data=request.data)
+        data = {}
         if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
+            user = serializer.save()
+            data["Success"] = "User creation successful"
+            data["username"] = user.username
+            data["email"] = user.email
+            token = Token.objects.get(user=user).key
+            data["token"] = token
+            return Response(data=data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
