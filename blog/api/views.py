@@ -1,7 +1,7 @@
 from operator import is_
 from rest_framework import status
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from .serializers import PostSerializer, UserRegistrationSerializer
 from blog.models import Post
 from django.shortcuts import get_object_or_404
@@ -9,6 +9,7 @@ from django.contrib.auth.models import User
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from django.contrib.auth import get_user_model
 from rest_framework.authtoken.models import Token
+from rest_framework.permissions import IsAuthenticated
 
 @api_view(["GET", "POST"])
 def api_list_view(request):
@@ -36,6 +37,7 @@ def api_list_view(request):
 
 
 @api_view(["GET", "PUT", "DELETE"])
+@permission_classes((IsAuthenticated))
 def api_detail_view(request, slug):
     try:
         post = Post.objects.get(slug=slug)
@@ -64,6 +66,7 @@ def api_detail_view(request, slug):
 
 
 @api_view(["PUT"])
+@permission_classes((IsAuthenticated))
 def api_update_view(request, slug):
     try:
         post = Post.objects.get(slug=slug)
@@ -81,6 +84,7 @@ def api_update_view(request, slug):
 
 
 @api_view(["DELETE"])
+@permission_classes((IsAuthenticated))
 def api_delete_view(request, slug):
     try:
         post = Post.objects.get(slug=slug)
@@ -98,6 +102,7 @@ def api_delete_view(request, slug):
 
     
 @api_view(["POST"])
+@permission_classes((IsAuthenticated))
 def api_create_view(request):
     user = User.objects.get(pk=1)
     post = Post(author=user)
