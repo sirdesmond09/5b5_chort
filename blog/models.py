@@ -35,3 +35,20 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
 
 
 
+
+
+class Blog(models.Model):
+    title = models.CharField(max_length=100)
+    content = models.TextField()
+    author = models.CharField(max_length=100)
+    date_posted = models.DateTimeField(default=timezone.now)
+    slug = models.SlugField()
+
+
+    def __str__(self):
+        return self.title
+
+    
+
+
+
