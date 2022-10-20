@@ -15,9 +15,30 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from rest_framework import permissions
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
+
+
+
+schema_view = get_schema_view(
+   openapi.Info(
+      title="Blogs API",
+      default_version='v1',
+      description="We write stories that touch",
+      terms_of_service="https://www.google.com/policies/terms/",
+      contact=openapi.Contact(email="desmond@univelcity.com"),
+      license=openapi.License(name="BSD License"),
+   ),
+   public=True,
+   permission_classes=[permissions.AllowAny],
+)
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('docs/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    path("auth/", include("account.urls")),
     path("", include("blog.urls")),
-    path("api/", include("blog.api.urls"))
+    path("api/", include("blog.api.urls")),
 ]

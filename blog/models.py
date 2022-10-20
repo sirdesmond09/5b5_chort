@@ -1,9 +1,7 @@
-from email.policy import default
-from operator import mod
-from pyexpat import model
+
 from django.db import models
 from django.utils import timezone
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.urls import reverse
 
 from django.conf import settings
@@ -12,6 +10,9 @@ from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
 
 # Create your models here.
+
+User = get_user_model()
+
 class Post(models.Model):
     title = models.CharField(max_length=100)
     content = models.TextField()
